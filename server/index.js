@@ -5,6 +5,8 @@ const http = require('http')
 const {Server} = require('socket.io')
 const cors = require('cors')
 
+const pool = require('./db')
+
 app.use(cors())
 app.use(express.json())
 
