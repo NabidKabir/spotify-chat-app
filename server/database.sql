@@ -8,21 +8,21 @@ CREATE TABLE users(
     current_song_id VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE thread(
+CREATE TABLE threads(
     thread_id SERIAL PRIMARY KEY,
     song_id VARCHAR(100)
 );
 
 CREATE TABLE participants(
-    participant_id SERIAL PRIMARY KEY
-    user_id INT REFERENCES users(user_id)
-    thread_id INT REFERENCES thread(thread_id)
+    participant_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id),
+    thread_id INT REFERENCES threads(thread_id)
 );
 
 CREATE TABLE messages(
     message_id SERIAL PRIMARY KEY,
-    sender_id INT REFERENCES users(user_id)
-    thread_id INT REFERENCES threads(thread_id)
-    content TEXT
+    sender_id INT REFERENCES users(user_id),
+    thread_id INT REFERENCES threads(thread_id),
+    content TEXT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
