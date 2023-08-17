@@ -10,7 +10,11 @@ const pool = require('./db')
 app.use(cors())
 app.use(express.json())
 
+
 const server = http.createServer(app)
+
+const userRouter = require('./api/userRouter')
+app.use('/api', userRouter)
 
 server.listen(5000, () => {
     console.log('server is running')
