@@ -45,7 +45,7 @@ router.get('/users/:email', async (req, res) => {
         console.log('Showing user: ', user.rows[0].email)
     } catch (err) {
         console.log('Could not find user by given email')
-        console.error(err)
+        //console.error(err)
     }
 })
 
@@ -71,7 +71,34 @@ router.get('/users/:email/threads', async (req, res) => {
 //--------------DECIDE WHETHER OR NOT TO UPDATE ENTIRE USER OR HAVE TWO
 //--------------SEPERATE PUT REQUESTS TO UPDATE BY spotify_token AND current_song_id
 //--------------= PROBABLY GO WITH LADDER OPTION
+router.put('/users/:email', async (req, res) => {
+    try {
+        const {email} = req.params
+        const {spotify_token, current_song_id} = req.body
 
+        query = 'UPDATE users SET'
+        const queryParams = [email]
+
+        if(spotify_token){
+            query += ' spotify_token = $2,'
+            queryParams.push(spotify_token)
+        }
+
+        if(current_song_id){
+            query += ' current_song_id = $3,'
+            queryParams.push(current_song_id)
+        }
+        query = query.slice(0, -1)
+        query += ' WHERE email = $1 RETURNING *'
+
+        const updateUser = await pool.query(query, queryParams)
+        res.json(updateUser.rows[0])
+
+        console.log(`Updated user ${email}`)
+    } catch (err) {
+        console.error(err)
+    }
+})
 
 //Delete a user by email
 router.delete('/users/:email', async (req, res) => {
