@@ -14,7 +14,9 @@ app.use(express.json())
 const server = http.createServer(app)
 
 const userRouter = require('./api/userRouter')
+const chatRouter = require('./api/chatRouter')
 app.use('/api', userRouter)
+app.use('/api', chatRouter)
 
 server.listen(5000, () => {
     console.log('server is running')
