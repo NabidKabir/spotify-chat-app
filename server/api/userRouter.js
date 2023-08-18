@@ -41,11 +41,16 @@ router.get('/users/:email', async (req, res) => {
             'SELECT * from users WHERE email = $1',
             [email]
         )
-        res.json(user.rows[0])
-        console.log('Showing user: ', user.rows[0].email)
+        if(user.rows.length > 0){
+            res.json(user.rows[0])
+            console.log('Showing user: ', user.rows[0].email)
+        }
+        else{
+            res.status(404).json({error: 'User not found with given email'})
+            console.log('Could not find user by given email')
+        }
     } catch (err) {
-        console.log('Could not find user by given email')
-        //console.error(err)
+        console.error(err)
     }
 })
 
