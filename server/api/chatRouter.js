@@ -5,12 +5,19 @@ const pool = require('../db')
 
 //------------------------------THREADS---------------------------------
 //Create a thread based on given song_id
-router.post('/chats/:current_song_id', async (req, res) => {
+router.post('/chats', async (req, res) => {
     try {
-        const { current_song_id } = req.params
+        const { song_id } = req.body
+
+        const threadExists = await pool.query('SELECT * FROM threads where song_id = $1', [song_id])
+        if(threadExists.rows.length > 0){
+            res.json({error: 'thread already exists with given songID'})
+            return
+        }
+
         const newThread = await pool.query(
             'INSERT INTO threads (song_id) VALUES ($1) RETURNING thread_id',
-            [current_song_id]
+            [song_id]
         )
 
         const threadID = newThread.rows[0].thread_id
@@ -74,17 +81,6 @@ router.delete('/chats/:songID', async (req, res) => {
         console.error(err)
     }
 })
-
-//------------------------------PARTICIPANTS---------------------------------
-
-//Add a user to a thread
-
-//Delete a user from a thread
-
-//Get all users in all threads (participants)
-
-//Get all users by a given thread_id
-
 
 //---------------------------------MESSAGES---------------------------------
 
