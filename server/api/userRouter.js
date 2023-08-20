@@ -6,6 +6,16 @@ const pool = require('../db')
 router.post('/users', async (req, res) => {
     try {
         const {email, display_name, spotify_token, current_song_id} = req.body
+
+        const userExists = await pool.query(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        )
+        if(userExists.rows.length > 0){
+            res.json({message: `User with email ${email} already exists`})
+            return
+        }
+
         const newUser = await pool.query(
             'INSERT INTO users (email, display_name, spotify_token, current_song_id) VALUES($1, $2, $3, $4) RETURNING *',
             [email, display_name, spotify_token, current_song_id]

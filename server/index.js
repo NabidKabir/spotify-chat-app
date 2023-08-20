@@ -16,9 +16,11 @@ const server = http.createServer(app)
 const userRouter = require('./api/userRouter')
 const chatRouter = require('./api/chatRouter')
 const participantRouter = require('./api/participantRouter')
+const messageRouter = require('./api/messageRouter')
 app.use('/api', userRouter)
 app.use('/api', chatRouter)
 app.use('/api', participantRouter)
+app.use('/api', messageRouter)
 
 server.listen(5000, () => {
     console.log('server is running')

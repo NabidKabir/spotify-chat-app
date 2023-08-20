@@ -65,10 +65,17 @@ router.delete('/participants/:threadID/:userID', async (req, res) => {
 router.get('/participants', async (req, res) => {
     try {
         const allParticipants = await pool.query(
-            'SELECT * FROM participants'
-        )
-        res.json(allParticipants.rows)
+            `SELECT participants.participant_id, users.email, participants.thread_id 
+            FROM participants INNER JOIN users ON participants.user_id = users.user_id`
+        );
 
+        const participantsWithDetails = allParticipants.rows.map(participant => ({
+            participant_id: participant.participant_id,
+            email: participant.email,
+            thread_id: participant.thread_id
+        }));
+
+        res.json(participantsWithDetails);
     } catch (err) {
         console.error(err)
     }
@@ -78,14 +85,21 @@ router.get('/participants', async (req, res) => {
 //Get all users by a given thread_id
 router.get('/participants/:threadID', async (req, res) => {
     try {
-        const {threadID} = req.params
+        const { threadID } = req.params;
         const threadParticipants = await pool.query(
-            'SELECT * FROM participants WHERE thread_id = $1',
+            `SELECT participants.participant_id, users.email, participants.thread_id 
+            FROM participants INNER JOIN users ON participants.user_id = users.user_id 
+            WHERE participants.thread_id = $1`,
             [threadID]
-        )
+        );
 
-        res.json(threadParticipants.rows)
+        const participantsWithDetails = threadParticipants.rows.map(participant => ({
+            participant_id: participant.participant_id,
+            email: participant.email,
+            thread_id: participant.thread_id
+        }));
 
+        res.json(participantsWithDetails);
     } catch (err) {
         console.error(err)
     }

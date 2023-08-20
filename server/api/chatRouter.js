@@ -75,20 +75,12 @@ router.delete('/chats/:songID', async (req, res) => {
             'DELETE FROM threads WHERE song_id = $1',
             [songID]
         )
-        res.json(`User ${songID} was deleted`)
-        console.log(`User ${songID} was deleted`)
+        res.json(`Chat with songID ${songID} was deleted`)
+        console.log(`Chat with songID ${songID} was deleted`)
     } catch (err) {
         console.error(err)
     }
 })
-
-//---------------------------------MESSAGES---------------------------------
-
-//Add a message to a thread
-
-//Get all messages
-
-//Get all messages by a given thread_id
 
 module.exports = router
 

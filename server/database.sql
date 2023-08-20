@@ -19,6 +19,7 @@ CREATE TABLE participants(
     thread_id INT REFERENCES threads(thread_id)
 );
 
+/* BE CAREFUL CODE IS WRITTEN SO THAT EMAIL MUST BE GIVEN AND NOT SENDER_ID*/
 CREATE TABLE messages(
     message_id SERIAL PRIMARY KEY,
     sender_id INT REFERENCES users(user_id),
